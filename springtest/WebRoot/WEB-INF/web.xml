@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<display-name>springtest</display-name>
+	<!--配置文件读取器 注册成功后 需要设定配置文件列表 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:springmvc-servlet.xml,
+			classpath:config/spring/*-application.xml
+		</param-value>
+	</context-param>
+
+	<!--  spring 加载log4j配置文件 -->
+	<context-param>
+		<param-name>log4jConfigLoaction</param-name>
+		<param-value>classpath:log4j.properties</param-value>
+	</context-param>
+	
+	<!-- 刷新Log4j配置文件的间隔,60秒 -->
+	<context-param>
+		<param-name>log4jRefreshInterval</param-name>
+		<param-value>60000</param-value>
+	</context-param>
+	
+	<!--当程序越来越大 配置文件中的 <bean> 越来越多 而且变得关系错综复杂 
+		难于维护 此时应该考虑 将配置文件拆分成多个 
+		为了让 Spring 能够读到这些配置文件 并察觉到他们的变化 
+		需要注册配置文件读取器 
+		对于 Servlet 2.3 以上标准 且 web 容器支持监听器 
+		可以 在 web.xml 中注册监听 -->
+	<listener> 
+		<listener-class> 
+		  org.springframework.web.context.ContextLoaderListener 
+		</listener-class> 
+	</listener> 
+	
+	<!--编码过滤-->
+	<filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Spring 加载 Log4j 的监听器 -->
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	
+	<!-- 防止内存泄漏 -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<!--置分发器 DispatcherServlet 是Spring MVC 的入口 -->
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:springmvc-servlet.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!--Spring 处理的 url 模板 -->
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	<!-- 设置初始访问的URL，访问输入*.jsp不友好 -->
+	<servlet>
+		<servlet-name>index</servlet-name>
+		<jsp-file>/index.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>index</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
+</web-app>

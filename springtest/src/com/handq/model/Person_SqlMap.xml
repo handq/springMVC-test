@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="person">
+
+	<!-- 将实体类与别名相关联 -->
+	<typeAlias alias="Person" type="com.handq.model.Person" />
+
+	<select id="getPersons" resultClass="Person">
+	<![CDATA[select p.pname as personName,p.pwd as pwd from person p]]>
+	</select>
+	<select id="getPerson" parameterClass="java.lang.String"
+		resultClass="Person">
+    <![CDATA[
+    select pname as personName,pwd as pwd from person where pname = #name#
+    ]]>
+	</select>
+		<update id="updatePerson" parameterClass="Person"> 
+    <![CDATA[
+    update person
+    SET
+    pwd=#pwd# 
+    where pname = #personName# 
+    ]]>
+	</update>
+</sqlMap>
