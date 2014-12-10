@@ -9,7 +9,7 @@
 			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 	
 	<!-- 需要扫描注解的bean路径  已经自带了注解启用，所以不用<context:annotation-config />-->
-	<context:component-scan base-package="com.handq.action" />
+	<context:component-scan base-package="com.handq.business.controller" />
 
 	<!-- 需要扫描的properties路径 -->
 	<context:property-placeholder location="classpath:jdbc.properties" />
